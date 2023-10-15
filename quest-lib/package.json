@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "ts-node src/run"
   },
   "keywords": [],
   "author": "",
@@ -13,5 +14,8 @@
     "@types/node": "^20.8.6",
     "rxjs": "^7.8.1",
     "typescript": "^5.2.2"
+  },
+  "devDependencies": {
+    "ts-node": "^10.9.1"
   }
 }
