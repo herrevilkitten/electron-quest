@@ -1,17 +1,17 @@
-import { interval } from "rxjs";
+import { interval, timer } from "rxjs";
 
 import { RUN_STATE } from "./state/run-state";
 import { CONFIG_STATE } from "./state/config-state";
 import { PLAYER_STATE } from "./state/player-state";
+import { interpret } from "./interpreter";
 
 export function mainLoop() {
   console.log("Starting mainLoop");
   const loopsPerSecond = CONFIG_STATE.value.server.loopsPerSecond;
   const loopInterval = 1000 / loopsPerSecond;
 
-  console.log(`${loopsPerSecond} loops per second, ${loopInterval}ms`);
+  console.log(`${loopsPerSecond} loops per second, ${loopInterval}ms per loop`);
   let inLoop = false;
-  let counter = 0;
   interval(loopInterval)
     .pipe(RUN_STATE.whileRunning())
     .subscribe({
@@ -28,25 +28,24 @@ export function mainLoop() {
           }
           player.send(`> ${input}`);
           /* Process input */
-          /*
-          if (!interpret(player, input)) {
+
+          if (!interpret({ actor: player, input })) {
             player.send(`Command ${input} not recognized.`);
           }
-          */
         }
 
         /* Process world events */
 
         /* Send output */
         inLoop = false;
-
-        counter = counter + 1;
-        if (counter > 100) {
-          RUN_STATE.stop();
-        }
       },
       complete: () => {
         console.log("Completed main loop");
       },
     });
+
+  timer(10_000).subscribe(() => {
+    console.log(`Stopping run`);
+    RUN_STATE.stop();
+  });
 }
