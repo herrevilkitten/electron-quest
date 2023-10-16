@@ -11,7 +11,7 @@ export class ConsoleConnection extends Connection {
     });
 
     const consolePrompt = () => {
-      readline.question("> ", (response) => {
+      readline.question(`> `, (response) => {
         this.input.add(response);
         consolePrompt();
       });

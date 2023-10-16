@@ -27,7 +27,7 @@ export function mainLoop() {
           if (!input) {
             continue;
           }
-          player.send(`> ${input}`);
+          player.send(`\n--> ${input}`);
           /* Process input */
 
           if (!interpret({ actor: player, input })) {
