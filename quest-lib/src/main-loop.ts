@@ -20,6 +20,7 @@ export function mainLoop() {
           return;
         }
         inLoop = true;
+
         /* Read input from every connection */
         for (const player of [...PLAYER_STATE.value]) {
           const input = player.connection.input.get();
@@ -37,6 +38,9 @@ export function mainLoop() {
         /* Process world events */
 
         /* Send output */
+        for (const player of [...PLAYER_STATE.value]) {
+          player.connection.flush();
+        }
         inLoop = false;
       },
       complete: () => {
@@ -45,7 +49,7 @@ export function mainLoop() {
     });
 
   timer(10_000).subscribe(() => {
-    console.log(`Stopping run`);
+    console.log(`Shutting down the server`);
     RUN_STATE.stop();
   });
 }
