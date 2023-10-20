@@ -19,4 +19,6 @@ export class Character {
     this.location?.people.delete(this);
     this.location = undefined;
   }
+
+  send(output: string | string[]) {}
 }

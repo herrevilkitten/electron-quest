@@ -1,31 +1,9 @@
 import { Character } from "./character";
 import { Room } from "./room";
 
-export class Container {
-  readonly contents = new Set<Item>();
+export class Armor {}
 
-  get count() {
-    return this.contents.size;
-  }
-
-  get totalCount(): number {
-    return [...this.contents].reduce((total, item) => {
-      return total + 1 + (item.container?.totalCount ?? 0);
-    }, 0);
-  }
-
-  get weight(): number {
-    return [...this.contents].reduce((total, item) => {
-      return total + item.weight;
-    }, 0);
-  }
-
-  get totalWeight(): number {
-    return [...this.contents].reduce((total, item) => {
-      return total + item.weight + (item.container?.totalWeight ?? 0);
-    }, 0);
-  }
-}
+export class Weapon {}
 
 export class Item {
   id = "";
@@ -33,32 +11,46 @@ export class Item {
   location?: Room | Item | Character;
 
   weight = 0;
-  container?: Container;
+  contents?: Set<Item>;
+  armor?: Armor;
+  weapon?: Weapon;
 
   moveTo(location: Room | Item | Character) {
     this.moveFrom();
-    this.location = location;
-    if (this.location instanceof Item) {
-      if (this.location.container) {
-        this.location.container.contents.add(this);
-      }
-    } else {
-      this.location.contents.add(this);
+
+    if (!location.contents) {
+      return;
     }
+    this.location = location;
+    this.location.contents?.add(this);
   }
 
   moveFrom() {
-    if (!this.location) {
+    if (!this.location || !this.location.contents) {
       return;
     }
 
-    if (this.location instanceof Item) {
-      if (this.location.container) {
-        this.location.container.contents.delete(this);
-      }
-    } else {
-      this.location.contents.delete(this);
-    }
-    this.location = undefined;
+    this.location.contents.delete(this);
+  }
+
+  get totalCount(): number {
+    return (
+      1 +
+      (this.contents
+        ? [...this.contents].reduce((total, item) => total + item.totalCount, 0)
+        : 0)
+    );
+  }
+
+  get totalWeight(): number {
+    return (
+      this.weight +
+      (this.contents
+        ? [...this.contents].reduce(
+            (total, item) => total + item.totalWeight,
+            0
+          )
+        : 0)
+    );
   }
 }

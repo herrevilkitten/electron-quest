@@ -48,8 +48,10 @@ export function mainLoop() {
       },
     });
 
-  timer(10_000).subscribe(() => {
-    console.log(`Shutting down the server`);
-    RUN_STATE.stop();
-  });
+  timer(60_000)
+    .pipe(RUN_STATE.whileRunning())
+    .subscribe(() => {
+      console.log(`Shutting down the server`);
+      RUN_STATE.stop();
+    });
 }
