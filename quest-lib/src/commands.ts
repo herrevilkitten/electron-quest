@@ -1,4 +1,4 @@
-import { parseString } from "./communication";
+import { sendTo, SendTo } from "./communication";
 import { Character } from "./database/character";
 import { RUN_STATE } from "./state/run-state";
 import { Trie } from "./util/trie";
@@ -13,9 +13,10 @@ export const COMMANDS = new Trie<Command>();
 
 COMMANDS.add("say", {
   fn: (actor, args) => {
-    actor.send(
-      parseString(actor, `$n say$% "$t"`, { subject: actor, text: args })
-    );
+    sendTo(SendTo.SUBJECT_ROOM, `$n say$% "$t"`, {
+      subject: actor,
+      text: args,
+    });
   },
 });
 
@@ -30,6 +31,56 @@ COMMANDS.add("look", {
       actor.send("You see:");
       actor.location.contents.forEach((content) => {
         actor.send(content.name);
+      });
+    }
+  },
+});
+
+COMMANDS.add("get", {
+  fn: (actor, args) => {
+    if (!actor.location) {
+      actor.send(`You are not anywhere.`);
+      return;
+    }
+
+    const match = /^(\d+)\.(.+)$/.exec(args);
+    let count = 1;
+    let name = args;
+    if (match) {
+      count = Number(match[1]);
+      name = match[2];
+    }
+    const item = actor.lookForItem(name, actor.location, count);
+    if (item) {
+      item.moveTo(actor);
+      sendTo(SendTo.SUBJECT_ROOM, `$n pick$% up $N`, {
+        subject: actor,
+        object: item,
+      });
+    }
+  },
+});
+
+COMMANDS.add("drop", {
+  fn: (actor, args) => {
+    if (!actor.location) {
+      actor.send(`You are not anywhere.`);
+      return;
+    }
+
+    const match = /^(\d+)\.(.+)$/.exec(args);
+    let count = 1;
+    let name = args;
+    if (match) {
+      count = Number(match[1]);
+      name = match[2];
+    }
+    const item = actor.lookForItem(name, actor, count);
+    if (item) {
+      item.moveTo(actor.location);
+      sendTo(SendTo.SUBJECT_ROOM, `$n drop$% $N`, {
+        subject: actor,
+        object: item,
       });
     }
   },

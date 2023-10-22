@@ -8,7 +8,7 @@ import { COMMANDS } from "./commands";
 console.log(COMMANDS);
 
 const player = new Player();
-player.fullName = "Eric";
+player.name = "Eric";
 const room = new Room();
 room.name = "Spawn";
 const sword = new Item();

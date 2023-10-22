@@ -1,9 +1,10 @@
 import { Item } from "./item";
 import { Room } from "./room";
+import { Parse, parseString } from "../communication";
 
 export class Character {
   id = "";
-  fullName = "";
+  name = "";
   location?: Room;
 
   readonly contents = new Set<Item>();
@@ -20,5 +21,21 @@ export class Character {
     this.location = undefined;
   }
 
-  send(output: string | string[]) {}
+  lookForItem(
+    name: string,
+    where: Character | Item | Room,
+    count = 1
+  ): Item | undefined {
+    if (!where.contents) {
+      return undefined;
+    }
+    for (const item of where.contents) {
+      if (item.name === name) {
+        return item;
+      }
+    }
+    return undefined;
+  }
+
+  send(output: string | string[], options?: Parse) {}
 }
