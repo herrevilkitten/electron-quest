@@ -4,7 +4,7 @@ import {
   Subscription,
   filter,
   takeUntil,
-} from 'rxjs';
+} from "rxjs";
 
 export enum RunStates {
   STOPPED,
@@ -14,11 +14,14 @@ export enum RunStates {
 }
 
 export class RunState extends BehaviorSubject<RunStates> {
+  abortController = new AbortController();
+
   start() {
     this.next(RunStates.STARTED);
   }
 
   stop() {
+    this.abortController.abort();
     this.next(RunStates.STOPPED);
   }
 

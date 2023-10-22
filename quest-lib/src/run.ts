@@ -23,7 +23,7 @@ player.moveTo(room);
 
 PLAYER_STATE.addPlayer(player);
 
-console.log(player);
-console.log(bag);
+//console.log(player);
+//console.log(bag);
 
 mainLoop();
