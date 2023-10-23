@@ -5,7 +5,7 @@ import { Trie } from "./util/trie";
 
 import chalk from "chalk";
 
-interface Command {
+export interface Command {
   fn: (actor: Character, args: string) => void;
 }
 

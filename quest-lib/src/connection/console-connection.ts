@@ -13,8 +13,7 @@ export class ConsoleConnection extends Connection {
       output: process.stdout,
     });
 
-    const abortController = new AbortController();
-
+    /* The AbortController signal is not working for `readline.question`. To get around it, when the signal happens, then send CTRL+D (EOT) to readline */
     RUN_STATE.abortController.signal.addEventListener(
       "abort",
       () => {
@@ -24,18 +23,11 @@ export class ConsoleConnection extends Connection {
       { once: true }
     );
     const consolePrompt = () => {
-      readline.question(``, { signal: abortController.signal }, (response) => {
+      readline.question(``, {}, (response) => {
         this.input.add(response.trim());
         consolePrompt();
       });
     };
-
-    RUN_STATE.subscribe((state) => {
-      if (state === RunStates.STOPPED) {
-        abortController.abort();
-      }
-    });
-
     consolePrompt();
   }
 
