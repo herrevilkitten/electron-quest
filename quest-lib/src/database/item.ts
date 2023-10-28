@@ -1,12 +1,13 @@
 import { Character } from "./character";
 import { Room } from "./room";
+import { randomUUID } from "crypto";
 
 export class Armor {}
 
 export class Weapon {}
 
 export class Item {
-  id = "";
+  id = randomUUID();
   name = "";
   location?: Room | Item | Character;
 

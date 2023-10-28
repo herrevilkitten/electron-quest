@@ -1,11 +1,16 @@
 import { Item } from "./item";
 import { Room } from "./room";
 import { Parse, parseString } from "../communication";
+import { Pool } from "../pool";
+import { randomUUID } from "crypto";
 
 export class Character {
-  id = "";
+  id = randomUUID();
   name = "";
   location?: Room;
+
+  readonly health = new Pool('health', 100);
+  readonly mana = new Pool('mana', 100);
 
   readonly contents = new Set<Item>();
 

@@ -1,6 +1,7 @@
 import { sendTo, SendTo } from "./communication";
 import { Character } from "./database/character";
 import { RUN_STATE } from "./state/run-state";
+import { WORLD_STATE } from "./state/world-state";
 import { Trie } from "./util/trie";
 
 import chalk from "chalk";
@@ -52,7 +53,7 @@ COMMANDS.add("get", {
     }
     const item = actor.lookForItem(name, actor.location, count);
     if (item) {
-      item.moveTo(actor);
+      WORLD_STATE.moveItem(item, actor);
       sendTo(SendTo.SUBJECT_ROOM, `$n pick$% up $N`, {
         subject: actor,
         object: item,
@@ -77,7 +78,7 @@ COMMANDS.add("drop", {
     }
     const item = actor.lookForItem(name, actor, count);
     if (item) {
-      item.moveTo(actor.location);
+      WORLD_STATE.moveItem(item, actor.location);
       sendTo(SendTo.SUBJECT_ROOM, `$n drop$% $N`, {
         subject: actor,
         object: item,

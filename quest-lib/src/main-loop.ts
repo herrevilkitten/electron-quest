@@ -29,10 +29,7 @@ export function mainLoop() {
           }
           player.send(`\n--> ${input}`);
           /* Process input */
-
-          if (!interpret({ actor: player, input })) {
-            player.send(`Command ${input} not recognized.`);
-          }
+          interpret({ actor: player, input });
         }
 
         /* Process world events */

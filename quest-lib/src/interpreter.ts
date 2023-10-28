@@ -15,23 +15,20 @@ export function interpret(interpret: Interpret) {
 
   const results = COMMANDS.searchFor(first);
   let command: Command | undefined = undefined;
-  console.log(first, '=>', results);
   if (results) {
     if (!results.found) {
       // no exact match
       const lookup = COMMANDS.allWordsFrom(results.node);
-      console.log('lookup', lookup);
       switch (lookup.length) {
         case 0:
-          console.log("No match.");
+          interpret.actor.send("No match.");
           break;
         case 1:
           command = lookup[0]?.data;
           break;
         default:
-          console.log(
-            "Did you mean",
-            lookup.map((command) => command.entry).join(", ")
+          interpret.actor.send(
+            `Did you mean ${lookup.map((command) => command.entry).join(", ")}`
           );
       }
     } else {
