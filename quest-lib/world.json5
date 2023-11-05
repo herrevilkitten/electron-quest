@@ -1,0 +1,37 @@
+{
+  rooms: [
+    {
+      id: "starting-room",
+      name: "Starting Room",
+    },
+  ],
+  items: [
+    {
+      id: "bag",
+      name: "Bag",
+      weight: 1,
+      contents: true,
+    },
+    {
+      id: "sword",
+      name: "Sword",
+      weight: 1,
+    },
+  ],
+  events: [
+    {
+      on: "load",
+      do: "spawn-item",
+      item: "bag",
+      where: "#room starting-room",
+      children: [
+        {
+          on: "load",
+          do: "spawn-item",
+          item: "sword",
+          where: "#parent",
+        },
+      ],
+    },
+  ],
+}

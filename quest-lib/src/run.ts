@@ -2,6 +2,7 @@ import { Character } from "./database/character";
 import { Item } from "./database/item";
 import { Player } from "./database/player";
 import { Room } from "./database/room";
+import { loadWorld } from "./loader/world-loader";
 import { mainLoop } from "./main-loop";
 import { PLAYER_STATE } from "./state/player-state";
 import { WORLD_STATE } from "./state/world-state";
@@ -21,6 +22,8 @@ function simplifyEvent(event: { [object: string]: any }) {
 WORLD_STATE.subscribe((event) => {
   console.log("World event:", simplifyEvent(event));
 });
+
+loadWorld();
 
 const player = new Player();
 player.name = "Eric";

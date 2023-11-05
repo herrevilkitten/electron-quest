@@ -7,8 +7,9 @@ export class Armor {}
 export class Weapon {}
 
 export class Item {
-  id = randomUUID();
+  id: string = randomUUID();
   name = "";
+  parent?: Item;
   location?: Room | Item | Character;
 
   weight = 0;
@@ -53,5 +54,22 @@ export class Item {
           )
         : 0)
     );
+  }
+
+  spawn(location: Room | Item | Character) {
+    const item = new Item();
+    item.id = randomUUID();
+    item.name = this.name;
+    item.location = location;
+    item.weapon = this.weapon;
+    if (this.contents) {
+      item.contents = new Set<Item>();
+    }
+    if (this.armor) {
+      item.armor = {};
+    }
+    if (this.weapon) {
+      item.weapon = {};
+    }
   }
 }
